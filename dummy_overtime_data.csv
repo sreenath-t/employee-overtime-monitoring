@@ -1,0 +1,7 @@
+employee_id,name,department,date,hours_worked,regular_hours,overtime_hours
+E001,Alice,Engineering,2025-05-01,10,8,2
+E002,Bob,Engineering,2025-05-01,9,8,1
+E003,Charlie,Marketing,2025-05-01,11,8,3
+E004,David,Finance,2025-05-01,8,8,0
+E001,Alice,Engineering,2025-05-02,9,8,1
+E003,Charlie,Marketing,2025-05-02,10,8,2
