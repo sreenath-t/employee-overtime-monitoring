@@ -1,0 +1,56 @@
+ /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #74ebd5, #9face6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-container {
+            background: #ffffff;
+            padding: 50px 60px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 1s ease;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            color: #2d3436;
+            margin-bottom: 30px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 14px 30px;
+            background: #6c5ce7;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background: #a29bfe;
+            box-shadow: 0 12px 24px rgba(108, 92, 231, 0.6);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
