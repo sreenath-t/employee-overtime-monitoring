@@ -28,3 +28,7 @@ def upload_csv(request):
     else:
         form = UploadCSVForm()
     return render(request, 'monitoring/upload.html', {'form': form})
+
+def show_overtime_records(request):
+    records = EmployeeOvertime.objects.all().order_by('-date')  # recent first
+    return render(request, 'monitoring/employee_overtime_list.html', {'records': records})
