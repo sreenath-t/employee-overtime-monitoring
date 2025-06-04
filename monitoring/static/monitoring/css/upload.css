@@ -1,0 +1,67 @@
+body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .upload-container {
+            background-color: #fff;
+            padding: 40px 50px;
+            border-radius: 16px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h2 {
+            color: #2d3436;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        select,
+        textarea {
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s ease;
+        }
+
+        input[type="file"]:focus,
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #fcb69f;
+            outline: none;
+        }
+
+        button {
+            background: #e17055;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(225, 112, 85, 0.4);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #ff7675;
+            transform: translateY(-2px);
+        }
