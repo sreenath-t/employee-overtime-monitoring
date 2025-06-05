@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Upload File</title>
+        <title>Upload CSV File</title>
         {% load static %}
         <link rel="stylesheet" href="{% static 'monitoring/css/upload.css' %}">
     </head>
     <body>
-        <h2>Upload Overtime CSV</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Upload</button>
-        </form>
+        <div class="upload-container">
+            <h2>Upload Overtime Data (CSV)</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Upload</button>
+            </form>
+        </div>
     </body>
 </html>

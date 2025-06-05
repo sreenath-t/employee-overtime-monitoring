@@ -65,3 +65,29 @@ body {
             background: #ff7675;
             transform: translateY(-2px);
         }
+        .file-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-upload label {
+    background-color: #e17055;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    box-shadow: 0 6px 18px rgba(225, 112, 85, 0.4);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.file-upload label:hover {
+    background: #ff7675;
+    transform: translateY(-2px);
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}

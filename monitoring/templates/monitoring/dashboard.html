@@ -6,9 +6,13 @@
         <link rel="stylesheet" href="{% static 'monitoring/css/dashboard.css' %}">
     </head>
     <body>
-        <h1>Overtime Dashboard</h1>
-        <p><a href="{% url 'upload_csv' %}">Upload New Overtime Data</a></p>
-        <p><a href="{% url 'show_overtime_records' %}">Show Overtime Employees List</a></p>
-        <p><a href="{% url 'overtime_analysis' %}">analysis</a></p>
+        <div class="dashboard-container">
+            <h1>Overtime Monitoring and Analysis</h1>
+            <div class="button-group">
+                <a href="{% url 'upload_csv' %}">Upload Overtime Data</a>
+                <a href="{% url 'show_overtime_records' %}">Overtime Employees List</a>
+                <a href="{% url 'overtime_analysis' %}">Analysis</a>
+            </div>
+        </div>
     </body>
 </html>
