@@ -6,7 +6,7 @@
       <link rel="stylesheet" href="{% static 'monitoring/css/analysis_dashboard.css' %}">
     </head>
     <body>
-        <h2>Total Overtime by Employee and Department</h2>
+        <h2>Total Overtime by Employee</h2>
         <ul>
             {% for row in overtime_summary %}
             <li>{{ row.name }} ({{ row.department }}): {{ row.overtime_hours }} hrs</li>
@@ -30,7 +30,7 @@
         <h2>Overtime by Day of Week</h2>
         <ul>
             {% for row in weekday_overtime %}
-            < li>{{ row.day_of_week }}: {{ row.overtime_hours }} hrs</li>
+            <li>{{ row.day_of_week }}: {{ row.overtime_hours }} hrs</li>
             {% endfor %}
         </ul>
 
