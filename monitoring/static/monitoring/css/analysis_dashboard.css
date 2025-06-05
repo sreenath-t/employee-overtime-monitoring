@@ -1,0 +1,43 @@
+/* analysis_dashboard.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    margin: 30px;
+    color: #2c3e50;
+}
+
+h2 {
+    text-align: center;
+    margin: 30px 0 10px;
+    color: #2d3436;
+    font-size: 24px;
+    border-bottom: 2px solid #dfe6e9;
+    padding-bottom: 5px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px auto 40px;
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 20px;
+}
+
+ul li {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 16px;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+ul li:hover {
+    background-color: #f1f2f6;
+    transition: 0.3s ease;
+}
