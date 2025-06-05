@@ -1,0 +1,34 @@
+<h2>Total Overtime by Employee and Department</h2>
+<ul>
+  {% for row in overtime_summary %}
+    <li>{{ row.name }} ({{ row.department }}): {{ row.overtime_hours }} hrs</li>
+  {% endfor %}
+</ul>
+
+<h2>High Overtime Employees</h2>
+<ul>
+  {% for row in high_overtime %}
+    <li>{{ row.name }}: {{ row.overtime_hours }} hrs</li>
+  {% endfor %}
+</ul>
+
+<h2>Monthly Overtime Trends</h2>
+<ul>
+  {% for row in monthly_trends %}
+    <li>{{ row.month }} - {{ row.department }}: {{ row.overtime_hours }} hrs</li>
+  {% endfor %}
+</ul>
+
+<h2>Overtime by Day of Week</h2>
+<ul>
+  {% for row in weekday_overtime %}
+    <li>{{ row.day_of_week }}: {{ row.overtime_hours }} hrs</li>
+  {% endfor %}
+</ul>
+
+<h2>Consistently High Overtime Employees</h2>
+<ul>
+  {% for row in consistent_high %}
+    <li>{{ row.name }}: Avg = {{ row.mean|floatformat:1 }} hrs, Std = {{ row.std|floatformat:1 }}</li>
+  {% endfor %}
+</ul>
