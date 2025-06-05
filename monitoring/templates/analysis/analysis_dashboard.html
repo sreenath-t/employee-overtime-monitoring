@@ -13,6 +13,13 @@
             {% endfor %}
         </ul>
 
+        <h2>Total Overtime by Department</h2>
+        <ul>
+            {% for row in department_overtime %}
+            <li>{{ row.department }}: {{ row.overtime_hours }} hrs</li>
+            {% endfor %}
+        </ul>
+
         <h2>High Overtime Employees</h2>
         <ul>
             {% for row in high_overtime %}

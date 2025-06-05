@@ -47,28 +47,30 @@ def overtime_analysis(request):
 
     # --- ANALYSIS ---
 
-    # 1. Total Overtime by Employee and Department
+    # 1. Total Overtime by Employee
     overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
 
-    # 2. High Overtime Employees
-    high_overtime = overtime_summary[overtime_summary['overtime_hours'] > 40]
+    # 2. Total overtime by department
+    department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
 
-    # 3. Monthly Trends
+    # 3. High Overtime Employees
+    high_overtime = overtime_summary[overtime_summary['overtime_hours'] > 4]
+
+    # 4. Monthly Trends
     df['month'] = df['date'].dt.to_period('M')
     monthly_trends = df.groupby(['month', 'department'])['overtime_hours'].sum().reset_index()
 
-    # 4. Overtime by Day of Week
+    # 5. Overtime by Day of Week
     df['day_of_week'] = df['date'].dt.day_name()
     weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
 
-    # 5. Consistent High Overtime (no performance data yet)
+    # 6. Consistent High Overtime (no performance data yet)
     employee_stats = df.groupby('name')['overtime_hours'].agg(['mean', 'std']).reset_index()
     consistent_high = employee_stats[(employee_stats['mean'] > 40) & (employee_stats['std'] < 5)]
 
-    # 6. Overtime vs Performance – Not implemented (performance field missing in model)
-
     context = {
         'overtime_summary': overtime_summary.to_dict(orient='records'),
+        'department_overtime': department_overtime.to_dict(orient='records'),
         'high_overtime': high_overtime.to_dict(orient='records'),
         'monthly_trends': monthly_trends.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
