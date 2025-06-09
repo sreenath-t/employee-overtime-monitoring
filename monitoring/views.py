@@ -61,12 +61,12 @@ def overtime_analysis(request):
     max_value = overtime_summary['overtime_hours'].max()
     high_overtime_emp = overtime_summary[overtime_summary['overtime_hours'] == max_value]
 
-    # 4. High Overtime Teams
+    # 4. High Overtime Dep
     department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
              #   Find the maximum overtime value
     max_overtime = department_overtime['overtime_hours'].max()
              #   Filter teams with that maximum value
-    high_overtime_team = department_overtime[department_overtime['overtime_hours'] == max_overtime]
+    high_overtime_dep = department_overtime[department_overtime['overtime_hours'] == max_overtime]
 
 
     # 5. Monthly Trends
@@ -85,7 +85,7 @@ def overtime_analysis(request):
         'overtime_summary': overtime_summary.to_dict(orient='records'),
         'department_overtime': department_overtime.to_dict(orient='records'),
         'high_overtime_emp': high_overtime_emp.to_dict(orient='records'),
-        'high_overtime_team': high_overtime_team.to_dict(orient='records'),
+        'high_overtime_dep': high_overtime_dep.to_dict(orient='records'),
         'monthly_trends': monthly_trends.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
         'consistent_high': consistent_high.to_dict(orient='records'),
