@@ -139,7 +139,6 @@ def visual_analysis(request):
     monthly_trends = df.groupby(['month', 'department'])['overtime_hours'].sum().reset_index()
     monthly_trends['dept_month'] = monthly_trends['department'].astype(str) + ' -> ' + monthly_trends['month'].astype(str)
     plt.figure(figsize=(12,6))
-    #plt.bar(monthly_trends['department'], monthly_trends['overtime_hours'], color='skyblue', width=0.3)
     plt.bar(monthly_trends['dept_month'], monthly_trends['overtime_hours'], color='skyblue', width=0.3)
     plt.xlabel('Department')
     plt.ylabel('Total Overtime Hours')
