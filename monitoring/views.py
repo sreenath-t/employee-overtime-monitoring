@@ -3,6 +3,8 @@ import csv
 from .forms import UploadCSVForm
 from .models import EmployeeOvertime
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import io
 import urllib, base64
