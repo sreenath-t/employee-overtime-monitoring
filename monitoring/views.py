@@ -87,23 +87,45 @@ def overtime_analysis(request):
 def visual_analysis(request):
     queryset = EmployeeOvertime.objects.all().values()
     df = pd.DataFrame(queryset)
-    overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
 
+    # 1. Total Overtime by Employee
     # Plotting
+    overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
     plt.figure(figsize=(12, 6))
     plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue')
     plt.xlabel('Employee Name')
     plt.ylabel('Total Overtime Hours')
-    #plt.title('Overtime Hours by Employee')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
 
     # Save to buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-    buf.close()
+    buf1 = io.BytesIO()
+    plt.savefig(buf1, format='png')
+    buf1.seek(0)
+    image_base64 = base64.b64encode(buf1.read()).decode('utf-8')
+    buf1.close()
     plt.close()
 
-    return render(request, 'analysis/diagrams.html', {'emp_overtime_chart': image_base64})
+    # 2. Total Overtime by Department
+    department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
+    plt.figure(figsize=(12,6))
+    plt.bar(department_overtime['department'], department_overtime['overtime_hours'], color='skyblue')
+    plt.xlabel('Department')
+    plt.ylabel('Total Overtime Hours')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    #Save to Buffer
+    buf2 = io.BytesIO()
+    plt.savefig(buf2, format='png')
+    buf2.seek(0)
+    image2_base64 = base64.b64encode(buf2.read()).decode('utf-8')
+    buf2.close()
+    plt.close()
+
+    x = {
+        'emp_overtime_chart': image_base64,
+        'dep_overtime_chart': image2_base64,
+    }
+
+    return render(request, 'analysis/diagrams.html', x)
