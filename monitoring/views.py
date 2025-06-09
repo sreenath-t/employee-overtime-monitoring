@@ -54,22 +54,6 @@ def overtime_analysis(request):
 
     # 1. Total Overtime by Employee
     overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
-    # Plotting
-    plt.figure(figsize=(12, 6))
-    plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue')
-    plt.xlabel('Employee Name')
-    plt.ylabel('Total Overtime Hours')
-    plt.title('Overtime Hours by Employee')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-
-    # Save to buffer
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-    buf.close()
-    plt.close()
 
     # 2. Total overtime by department
     department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
@@ -96,7 +80,30 @@ def overtime_analysis(request):
         'monthly_trends': monthly_trends.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
         'consistent_high': consistent_high.to_dict(orient='records'),
-        'overtime_chart': image_base64,
     }
 
     return render(request, 'analysis/analysis_dashboard.html', context)
+
+def visual_analysis(request):
+    queryset = EmployeeOvertime.objects.all().values()
+    df = pd.DataFrame(queryset)
+    overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
+
+    # Plotting
+    plt.figure(figsize=(12, 6))
+    plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue')
+    plt.xlabel('Employee Name')
+    plt.ylabel('Total Overtime Hours')
+    plt.title('Overtime Hours by Employee')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+
+    # Save to buffer
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
+    plt.close()
+
+    return render(request, 'analysis/diagrams.html', {'emp_overtime_chart': image_base64})
