@@ -58,24 +58,34 @@ def overtime_analysis(request):
     department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
 
     # 3. High Overtime Employees
-    high_overtime = overtime_summary[overtime_summary['overtime_hours'] > 4]
+    max_value = overtime_summary['overtime_hours'].max()
+    high_overtime_emp = overtime_summary[overtime_summary['overtime_hours'] == max_value]
 
-    # 4. Monthly Trends
+    # 4. High Overtime Teams
+    department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
+             #   Find the maximum overtime value
+    max_overtime = department_overtime['overtime_hours'].max()
+             #   Filter teams with that maximum value
+    high_overtime_team = department_overtime[department_overtime['overtime_hours'] == max_overtime]
+
+
+    # 5. Monthly Trends
     df['month'] = df['date'].dt.to_period('M')
     monthly_trends = df.groupby(['month', 'department'])['overtime_hours'].sum().reset_index()
 
-    # 5. Overtime by Day of Week
+    # 6. Overtime by Day of Week
     df['day_of_week'] = df['date'].dt.day_name()
     weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
 
-    # 6. Consistent High Overtime (no performance data yet)
+    # 7. Consistent High Overtime (no performance data yet)
     employee_stats = df.groupby('name')['overtime_hours'].agg(['mean', 'std']).reset_index()
     consistent_high = employee_stats[(employee_stats['mean'] > 40) & (employee_stats['std'] < 5)]
 
     context = {
         'overtime_summary': overtime_summary.to_dict(orient='records'),
         'department_overtime': department_overtime.to_dict(orient='records'),
-        'high_overtime': high_overtime.to_dict(orient='records'),
+        'high_overtime_emp': high_overtime_emp.to_dict(orient='records'),
+        'high_overtime_team': high_overtime_team.to_dict(orient='records'),
         'monthly_trends': monthly_trends.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
         'consistent_high': consistent_high.to_dict(orient='records'),

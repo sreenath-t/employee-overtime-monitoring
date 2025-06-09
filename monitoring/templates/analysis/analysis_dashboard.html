@@ -22,8 +22,15 @@
 
         <h2>High Overtime Employees</h2>
         <ul>
-            {% for row in high_overtime %}
+            {% for row in high_overtime_emp %}
             <li>{{ row.name }}: {{ row.overtime_hours }} hrs</li>
+            {% endfor %}
+        </ul>
+
+        <h2>High Overtime Teams</h2>
+        <ul>
+            {% for row in high_overtime_team %}
+            <li>{{row.department}}: {{row.overtime_hours}} hrs</li>
             {% endfor %}
         </ul>
 
