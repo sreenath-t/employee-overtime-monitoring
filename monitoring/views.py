@@ -94,7 +94,7 @@ def visual_analysis(request):
     plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue')
     plt.xlabel('Employee Name')
     plt.ylabel('Total Overtime Hours')
-    plt.title('Overtime Hours by Employee')
+    #plt.title('Overtime Hours by Employee')
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
 
