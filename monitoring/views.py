@@ -10,8 +10,7 @@ import io
 import urllib, base64
 
 def dashboard(request):
-    return render(request, 'monitoring\dashboard.html')
-
+    return render(request, 'monitoring/dashboard.html')
 
 def upload_csv(request):
     if request.method == 'POST':
@@ -92,10 +91,10 @@ def visual_analysis(request):
     # Plotting
     overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
     plt.figure(figsize=(12, 6))
-    plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue')
+    plt.bar(overtime_summary['name'], overtime_summary['overtime_hours'], color='skyblue', width=0.3)
     plt.xlabel('Employee Name')
     plt.ylabel('Total Overtime Hours')
-    plt.xticks(rotation=45, ha='right')
+    plt.xticks(rotation=0, ha='right')
     plt.tight_layout()
 
     # Save to buffer
@@ -109,10 +108,10 @@ def visual_analysis(request):
     # 2. Total Overtime by Department
     department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
     plt.figure(figsize=(12,6))
-    plt.bar(department_overtime['department'], department_overtime['overtime_hours'], color='skyblue')
+    plt.bar(department_overtime['department'], department_overtime['overtime_hours'], color='skyblue', width=0.3)
     plt.xlabel('Department')
     plt.ylabel('Total Overtime Hours')
-    plt.xticks(rotation=45, ha='right')
+    plt.xticks(rotation=0, ha='right')
     plt.tight_layout()
 
     #Save to Buffer
