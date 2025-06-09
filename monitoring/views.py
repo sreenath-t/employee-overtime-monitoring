@@ -97,6 +97,8 @@ def visual_analysis(request):
     queryset = EmployeeOvertime.objects.all().values()
     df = pd.DataFrame(queryset)
 
+    df['date'] = pd.to_datetime(df['date'])
+
     # 1. Total Overtime by Employee
     # Plotting
     overtime_summary = df.groupby(['name', 'department'])['overtime_hours'].sum().reset_index()
@@ -132,9 +134,30 @@ def visual_analysis(request):
     buf2.close()
     plt.close()
 
+    # 3. Monthly Overtime Trends
+    df['month'] = df['date'].dt.to_period('M')
+    monthly_trends = df.groupby(['month', 'department'])['overtime_hours'].sum().reset_index()
+    monthly_trends['dept_month'] = monthly_trends['department'].astype(str) + ' -> ' + monthly_trends['month'].astype(str)
+    plt.figure(figsize=(12,6))
+    #plt.bar(monthly_trends['department'], monthly_trends['overtime_hours'], color='skyblue', width=0.3)
+    plt.bar(monthly_trends['dept_month'], monthly_trends['overtime_hours'], color='skyblue', width=0.3)
+    plt.xlabel('Department')
+    plt.ylabel('Total Overtime Hours')
+    plt.xticks(rotation=0, ha='right')
+    plt.tight_layout()
+
+    #Save to Buffer
+    buf3 = io.BytesIO()
+    plt.savefig(buf3, format='png')
+    buf3.seek(0)
+    image3_base64 = base64.b64encode(buf3.read()).decode('utf-8')
+    buf3.close()
+    plt.close()
+
     x = {
         'emp_overtime_chart': image_base64,
         'dep_overtime_chart': image2_base64,
+        'monthly_overtime_trends':image3_base64
     }
 
     return render(request, 'analysis/diagrams.html', x)
