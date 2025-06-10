@@ -153,10 +153,29 @@ def visual_analysis(request):
     buf3.close()
     plt.close()
 
+    # 4. Overtime by Day of Week
+    df['day_of_week'] = df['date'].dt.day_name()
+    weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
+    plt.figure(figsize=(12,6))
+    plt.bar(weekday_overtime['day_of_week'], weekday_overtime['overtime_hours'], color='skyblue', width=0.3)
+    plt.xlabel('Day of Week')
+    plt.ylabel('Total Overtime Hours')
+    plt.xticks(rotation=0, ha='right')
+    plt.tight_layout()
+
+    #Save to Buffer
+    buf4 = io.BytesIO()
+    plt.savefig(buf4, format='png')
+    buf4.seek(0)
+    image4_base64 = base64.b64encode(buf4.read()).decode('utf-8')
+    buf4.close()
+    plt.close()
+
     x = {
         'emp_overtime_chart': image_base64,
         'dep_overtime_chart': image2_base64,
-        'monthly_overtime_trends':image3_base64
+        'monthly_overtime_trends': image3_base64,
+        'overtime_by_day_of_week': image4_base64,
     }
 
     return render(request, 'analysis/diagrams.html', x)
