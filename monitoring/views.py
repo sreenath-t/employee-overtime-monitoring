@@ -77,7 +77,7 @@ def overtime_analysis(request):
     df['day_of_week'] = df['date'].dt.day_name()
     weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
 
-    # 7. Consistent High Overtime (no performance data yet)
+    # 7. Consistent High Overtime
     employee_stats = df.groupby('name')['overtime_hours'].agg(['mean', 'std']).reset_index()
     consistent_high = employee_stats[(employee_stats['mean'] > 40) & (employee_stats['std'] < 5)]
 
