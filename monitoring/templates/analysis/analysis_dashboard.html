@@ -48,11 +48,34 @@
             {% endfor %}
         </ul>
 
-        <h2>Consistently High Overtime Employees</h2>
-        <ul>
-            {% for row in consistent_high %}
-            <li>{{ row.name }}: Avg = {{ row.mean|floatformat:1 }} hrs, Std = {{ row.std|floatformat:1 }}</li>
-            {% endfor %}
-        </ul>
+        <h2>Employees with Consistently High Overtime</h2>
+        {% if consistent_high %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Emp ID</th>
+                    <th>Department</th>
+                    <th>Total Days</th>
+                    <th>High Overtime Days</th>
+                    <th>High Overtime Ratio (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in consistent_high %}
+                <tr>
+                    <td>{{ emp.name }}</td>
+                    <td>{{ emp.employee_id }}</td>
+                    <td>{{ emp.department }}</td>
+                    <td>{{ emp.total_days }}</td>
+                    <td>{{ emp.high_days }}</td>
+                    <td>{{ emp.high_ratio|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>No employees meet the consistent high overtime criteria.</p>
+        {% endif %}
     </body>
 </html>
