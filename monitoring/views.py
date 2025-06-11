@@ -193,11 +193,43 @@ def visual_analysis(request):
     buf4.close()
     plt.close()
 
+    # 5. Individual Employee Analysis
+    THRESHOLD = 1  # e.g., >2 hours considered high
+    MIN_PERCENT_DAYS = 0.7  # 70% of working days
+
+    df['high_overtime_flag'] = df['overtime_hours'] > THRESHOLD
+
+    total_days = df.groupby('name')['date'].nunique().reset_index(name='total_days')
+    high_overtime_days = df[df['high_overtime_flag']].groupby('name')['date'].nunique().reset_index(name='high_days')
+
+    merged = pd.merge(total_days, high_overtime_days, on='name', how='left').fillna(0)
+    merged['high_ratio'] = merged['high_days'] / merged['total_days']
+
+    consistent_high = merged[merged['high_ratio'] >= MIN_PERCENT_DAYS]
+
+    employee_info = df[['name', 'employee_id', 'department']].drop_duplicates()
+    consistent_high = pd.merge(consistent_high, employee_info, on='name', how='left')
+    plt.figure(figsize=(12,6))
+    plt.bar(consistent_high['name'], consistent_high['high_ratio'], color='coral', width=0.3)
+    plt.xlabel('Employee')
+    plt.ylabel('Total Overtime Hours')
+    plt.xticks(rotation=0, ha='right')
+    plt.tight_layout()
+
+    #Save to Buffer
+    buf5 = io.BytesIO()
+    plt.savefig(buf5, format='png')
+    buf5.seek(0)
+    image5_base64 = base64.b64encode(buf5.read()).decode('utf-8')
+    buf5.close()
+    plt.close()
+
     x = {
         'emp_overtime_chart': image_base64,
         'dep_overtime_chart': image2_base64,
         'monthly_overtime_trends': image3_base64,
         'overtime_by_day_of_week': image4_base64,
+        'individual_emp_analysis': image5_base64
     }
 
     return render(request, 'analysis/diagrams.html', x)
