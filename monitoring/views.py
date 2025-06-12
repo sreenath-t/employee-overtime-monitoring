@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import numpy as np
 import io
 import urllib, base64
 
@@ -100,6 +101,22 @@ def overtime_analysis(request):
     employee_info = df[['name', 'employee_id', 'department']].drop_duplicates()
     consistent_high = pd.merge(consistent_high, employee_info, on='name', how='left')
 
+    # 6. Overtime vs. performance
+    qs = EmployeeOvertime.objects.all().values('employee_id', 'name', 'overtime_hours')
+    df = pd.DataFrame(qs)
+
+    if df.empty:
+        return render(request, 'overtime_analysis.html', {'error': 'No data available.'})
+
+    # Group by employee
+    df_grouped = df.groupby(['employee_id', 'name'])['overtime_hours'].sum().reset_index()
+
+    # Simulate performance rating (1–5)
+    np.random.seed(0)
+    df_grouped['performance_rating'] = np.random.randint(1, 6, size=len(df_grouped))
+
+    # Correlation
+    correlation = df_grouped['overtime_hours'].corr(df_grouped['performance_rating'])
 
     context = {
         'overtime_summary': overtime_summary.to_dict(orient='records'),
@@ -109,6 +126,8 @@ def overtime_analysis(request):
         'monthly_trends': monthly_trends.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
         'consistent_high': consistent_high.to_dict(orient='records'),
+        'correlation': round(correlation, 2),
+        'data': df_grouped.to_dict(orient='records'),
     }
 
     return render(request, 'analysis/analysis_dashboard.html', context)
@@ -222,12 +241,51 @@ def visual_analysis(request):
     buf5.close()
     plt.close()
 
+    
+    # 6. Overtime vs performance
+
+    qs = EmployeeOvertime.objects.all().values('employee_id', 'name', 'overtime_hours')
+    df = pd.DataFrame(qs)
+
+    if df.empty:
+        return render(request, 'overtime_analysis.html', {'error': 'No data available.'})
+
+    df_grouped = df.groupby(['employee_id', 'name'])['overtime_hours'].sum().reset_index()
+
+    np.random.seed(0)
+    df_grouped['performance_rating'] = np.random.randint(1, 6, size=len(df_grouped))
+
+    #correlation = df_grouped['overtime_hours'].corr(df_grouped['performance_rating'])
+
+    # Plotting
+    x = np.arange(len(df_grouped))  # employee indices
+    width = 0.35  # width of bars
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(x - width/2, df_grouped['overtime_hours'], width, label='Overtime Hours')
+    plt.bar(x + width/2, df_grouped['performance_rating'], width, label='Performance Rating')
+    plt.xticks(x, df_grouped['name'], rotation=0)
+    plt.xlabel("Employee")
+    plt.ylabel("Value")
+    plt.title("Overtime vs. Simulated Performance")
+    plt.legend()
+    plt.tight_layout()
+
+    # Save to base64
+    buf6 = io.BytesIO()
+    plt.savefig(buf6, format='png')
+    buf6.seek(0)
+    image6_base64 = base64.b64encode(buf6.getvalue()).decode('utf-8')
+    buf6.close()
+    plt.close()
+
     x = {
         'emp_overtime_chart': image_base64,
         'dep_overtime_chart': image2_base64,
         'monthly_overtime_trends': image3_base64,
         'overtime_by_day_of_week': image4_base64,
-        'individual_emp_analysis': image5_base64
+        'individual_emp_analysis': image5_base64,
+        'overtime_vs_performance': image6_base64
     }
 
     return render(request, 'analysis/diagrams.html', x)

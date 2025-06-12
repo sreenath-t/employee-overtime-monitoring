@@ -77,5 +77,29 @@
         {% else %}
             <p>No employees meet the consistent high overtime criteria.</p>
         {% endif %}
+
+        <h2>Overtime vs. Performance (Simulated)</h2>
+
+        <h3>Employee Summary</h3>
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Name</th>
+                    <th>Total Overtime</th>
+                    <th>Simulated Performance Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.employee_id }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.overtime_hours }}</td>
+                    <td>{{ row.performance_rating }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </body>
 </html>
