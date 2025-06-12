@@ -78,8 +78,6 @@ def overtime_analysis(request):
     weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
 
     # 7. Consistent High Overtime
-    #employee_stats = df.groupby('name')['overtime_hours'].agg(['mean', 'std']).reset_index()
-    #consistent_high = employee_stats[(employee_stats['mean'] > 40) & (employee_stats['std'] < 5)]
 
     # 1. Set a threshold for "high overtime" per day
     THRESHOLD = 1  # e.g., >2 hours considered high
