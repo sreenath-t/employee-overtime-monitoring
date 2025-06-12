@@ -80,28 +80,28 @@ def overtime_analysis(request):
 
     # 7. Consistent High Overtime
 
-    # 1. Set a threshold for "high overtime" per day
+        # 1. Set a threshold for "high overtime" per day
     THRESHOLD = 1  # e.g., >2 hours considered high
     MIN_PERCENT_DAYS = 0.65  # 70% of working days
 
-    # 2. Count total days and high overtime days per employee
+        # 2. Count total days and high overtime days per employee
     df['high_overtime_flag'] = df['overtime_hours'] > THRESHOLD
 
     total_days = df.groupby('name')['date'].nunique().reset_index(name='total_days')
     high_overtime_days = df[df['high_overtime_flag']].groupby('name')['date'].nunique().reset_index(name='high_days')
 
-    # 3. Merge and calculate ratio
+        # 3. Merge and calculate ratio
     merged = pd.merge(total_days, high_overtime_days, on='name', how='left').fillna(0)
     merged['high_ratio'] = merged['high_days'] / merged['total_days']
 
-    #  4. Filter consistent high overtime employees
+        #  4. Filter consistent high overtime employees
     consistent_high = merged[merged['high_ratio'] >= MIN_PERCENT_DAYS]
 
-    # 5. Add employee metadata
+        # 5. Add employee metadata
     employee_info = df[['name', 'employee_id', 'department']].drop_duplicates()
     consistent_high = pd.merge(consistent_high, employee_info, on='name', how='left')
 
-    # 6. Overtime vs. performance
+    # 8. Overtime vs. performance
     qs = EmployeeOvertime.objects.all().values('employee_id', 'name', 'overtime_hours')
     df = pd.DataFrame(qs)
 
