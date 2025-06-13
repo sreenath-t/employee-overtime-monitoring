@@ -82,7 +82,7 @@ def overtime_analysis(request):
 
         # 1. Set a threshold for "high overtime" per day
     THRESHOLD = 1  # e.g., >1 hours considered high
-    MIN_PERCENT_DAYS = 0.6  # 65% of working days
+    MIN_PERCENT_DAYS = 0.6  # 60% of working days
 
         # 2. Count total days and high overtime days per employee
     df['high_overtime_flag'] = df['overtime_hours'] > THRESHOLD
