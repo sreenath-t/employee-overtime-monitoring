@@ -111,9 +111,16 @@ def overtime_analysis(request):
     # Group by employee
     df_grouped = df.groupby(['employee_id', 'name'])['overtime_hours'].sum().reset_index()
 
-    # Simulate performance rating (1–5)
-    np.random.seed(0)
-    df_grouped['performance_rating'] = np.random.randint(1, 6, size=len(df_grouped))
+    # performance rating (1–5)
+    df_grouped['performance_rating'] = pd.cut(
+        df_grouped['overtime_hours'],
+        bins=5,                         # 5 bins → 6 edges internally
+        labels=[1, 2, 3, 4, 5],         # Correct: 5 labels
+        include_lowest=True            # Ensures lowest value is included in first bin
+    ).astype(int)
+
+
+
 
     # Correlation
     correlation = df_grouped['overtime_hours'].corr(df_grouped['performance_rating'])
