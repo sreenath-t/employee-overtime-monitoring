@@ -234,6 +234,7 @@ def visual_analysis(request):
     plt.bar(consistent_high['name'], consistent_high['high_ratio'], color='coral', width=0.3)
     plt.xlabel('Employee')
     plt.ylabel('Total Overtime Hours')
+    plt.title('Employees with consistently high overtime')
     plt.xticks(rotation=0, ha='right')
     plt.tight_layout()
 
