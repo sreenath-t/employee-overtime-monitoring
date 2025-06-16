@@ -309,7 +309,7 @@ def visual_analysis(request):
     plt.hist(df_grouped['avg_overtime_hours'], bins=5)
     plt.title('Distribution of Average Overtime Hours per Employee')
     plt.xlabel('Average Overtime Hour Ranges')
-    plt.ylabel('Average Overtime Hours')
+    plt.ylabel('Number of Employees')
     plt.xticks(rotation=0, ha='right')
     plt.tight_layout()
 
