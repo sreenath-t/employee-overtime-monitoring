@@ -119,9 +119,6 @@ def overtime_analysis(request):
         include_lowest=True            # Ensures lowest value is included in first bin
     ).astype(int)
 
-
-
-
     # Correlation
     correlation = df_grouped['overtime_hours'].corr(df_grouped['performance_rating'])
 
