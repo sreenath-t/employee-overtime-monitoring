@@ -289,13 +289,46 @@ def visual_analysis(request):
     buf6.close()
     plt.close()
 
+    # 7. Histogram
+    qs = EmployeeOvertime.objects.all().values('employee_id', 'name', 'overtime_hours')
+    df = pd.DataFrame(qs)
+
+    if df.empty:
+        return render(request, 'overtime_analysis.html', {'error': 'No data available.'})
+
+    # Group by employee to calculate average overtime hours
+    df_grouped = df.groupby(['employee_id', 'name'])['overtime_hours'].mean().reset_index()
+    df_grouped.rename(columns={'overtime_hours': 'avg_overtime_hours'}, inplace=True)
+
+    # Sort by average overtime (optional)
+    df_grouped.sort_values(by='avg_overtime_hours', ascending=False, inplace=True)
+
+    # Plot - employee distribution of average overtime
+    plt.figure(figsize=(12, 6))
+    #plt.bar(df_grouped['name'], df_grouped['avg_overtime_hours'], color='mediumslateblue', edgecolor='black')
+    plt.hist(df_grouped['avg_overtime_hours'], bins=5)
+    plt.title('Distribution of Average Overtime Hours per Employee')
+    plt.xlabel('Average Overtime Hour Ranges')
+    plt.ylabel('Average Overtime Hours')
+    plt.xticks(rotation=0, ha='right')
+    plt.tight_layout()
+
+    # Convert plot to base64
+    buf7 = io.BytesIO()
+    plt.savefig(buf7, format='png')
+    buf7.seek(0)
+    image7_base64 = base64.b64encode(buf7.getvalue()).decode('utf-8')
+    buf7.close()
+    plt.close()
+
     x = {
         'emp_overtime_chart': image_base64,
         'dep_overtime_chart': image2_base64,
         'monthly_overtime_trends': image3_base64,
         'overtime_by_day_of_week': image4_base64,
         'individual_emp_analysis': image5_base64,
-        'overtime_vs_performance': image6_base64
+        'overtime_vs_performance': image6_base64,
+        'histogram': image7_base64
     }
 
     return render(request, 'analysis/diagrams.html', x)
