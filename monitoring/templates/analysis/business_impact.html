@@ -2,12 +2,15 @@
 <html>
     <head>
         <title>Business Impact</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'monitoring/css/business_impact.css' %}">
     </head>
     <body>
-        <h2>Business Impact Insights</h2>
+        <h1>Business Impact Insights</h1>
+        <div class="container">
         <!-- 1. Workload Balance -->
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">1. Workload Balance</div>
+            <div class="card-header bg-primary text-white">WORKLOAD BALANCE</div>
             <div class="card-body">
                 {% if high_overtime_dep %}
                 {% for dep in high_overtime_dep %}
@@ -22,7 +25,7 @@
         
         <!-- 2. Employee Wellbeing -->
         <div class="card mb-4">
-            <div class="card-header bg-warning">2. Employee Wellbeing</div>
+            <div class="card-header bg-warning">EMPLOYEE WELLBEING</div>
             <div class="card-body">
                 {% if consistent_high %}
                 <p>The following employees are showing signs of consistently high overtime, which may indicate burnout risk:</p>
@@ -38,7 +41,7 @@
         
         <!-- 3. Policy Making -->
         <!--<div class="card mb-4">
-            <div class="card-header bg-success text-white">3. Policy Making</div>
+            <div class="card-header bg-success text-white">POLICY MAKING</div>
             <div class="card-body">
                 <p><strong>Overtime vs. Performance Correlation:</strong> {{ correlation }}</p>
                 <p><em>Interpretation:</em> 
@@ -56,7 +59,7 @@
 
         <!-- 4. Operational Efficiency -->
         <div class="card mb-4">
-            <div class="card-header bg-info text-white">4. Operational Efficiency</div>
+            <div class="card-header bg-info text-white">OPERATIONAL EFFICIENCY</div>
             <div class="card-body">
                 {% if weekday_overtime %}
                 <p>Overtime is distributed across the week as follows:</p>
@@ -68,6 +71,7 @@
                 <p>No overtime data available for weekdays.</p>
                 {% endif %}
             </div>
+        </div>
         </div>
     </body>
 </html>
