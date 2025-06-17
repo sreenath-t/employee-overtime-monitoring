@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Business Impact</title>
+    </head>
+    <body>
+        <h2>Business Impact Insights</h2>
+        <!-- 1. Workload Balance -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">1. Workload Balance</div>
+            <div class="card-body">
+                {% if high_overtime_dep %}
+                {% for dep in high_overtime_dep %}
+                <p>The <strong>{{ dep.department }}</strong> department has recorded a high total of <strong>{{ dep.overtime_hours|floatformat:2 }}</strong> overtime hours.</p>
+                {% endfor %}
+                <p><em>Action:</em> Consider adding staff or adjusting workload in these departments.</p>
+                {% else %}
+                <p>No departments currently exhibit unusually high overtime hours.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 2. Employee Wellbeing -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning">2. Employee Wellbeing</div>
+            <div class="card-body">
+                {% if consistent_high %}
+                <p>The following employees are showing signs of consistently high overtime, which may indicate burnout risk:</p>
+                {% for emp in consistent_high %}
+                <p><strong>{{ emp.name }}</strong> from the <strong>{{ emp.department }}</strong> department has a high overtime ratio of <strong>{{ emp.high_ratio|floatformat:2 }}</strong>.</p>
+                {% endfor %}
+                <p><em>Action:</em> Consider reaching out to these employees for wellbeing checks or workload adjustments.</p>
+                {% else %}
+                <p>No employees currently meet the threshold for consistent high overtime.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 3. Policy Making -->
+        <!--<div class="card mb-4">
+            <div class="card-header bg-success text-white">3. Policy Making</div>
+            <div class="card-body">
+                <p><strong>Overtime vs. Performance Correlation:</strong> {{ correlation }}</p>
+                <p><em>Interpretation:</em> 
+                    {% if correlation > 0.5 %} 
+                    Higher overtime correlates with better performance.
+                    {% elif correlation < -0.5 %}
+                    Higher overtime correlates with lower performance (risk of burnout).
+                    {% else %}
+                    No strong correlation found between overtime and performance.
+                    {% endif %}
+                </p>
+                <p><em>Action:</em> Consider shaping overtime policies based on this insight.</p>
+            </div>
+        </div>-->
+
+        <!-- 4. Operational Efficiency -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">4. Operational Efficiency</div>
+            <div class="card-body">
+                {% if weekday_overtime %}
+                <p>Overtime is distributed across the week as follows:</p>
+                {% for row in weekday_overtime %}
+                <p>On <strong>{{ row.day_of_week }}</strong>, employees logged a total of <strong>{{ row.overtime_hours|floatformat:2 }}</strong> overtime hours.</p>
+                {% endfor %}
+                <p><em>Action:</em> Identify peak days and consider shifting workloads earlier in the week to prevent end-of-week overload.</p>
+                {% else %}
+                <p>No overtime data available for weekdays.</p>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>

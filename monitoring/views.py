@@ -11,7 +11,37 @@ import io
 import urllib, base64
 
 def dashboard(request):
-    return render(request, 'monitoring/dashboard.html')
+    queryset = EmployeeOvertime.objects.all().values()
+    df = pd.DataFrame(queryset)
+    THRESHOLD = 1  # e.g., >1 hours considered high
+    MIN_PERCENT_DAYS = 0.6  # 60% of working days
+
+    df['high_overtime_flag'] = df['overtime_hours'] > THRESHOLD
+
+    total_days = df.groupby('name')['date'].nunique().reset_index(name='total_days')
+    high_overtime_days = df[df['high_overtime_flag']].groupby('name')['date'].nunique().reset_index(name='high_days')
+
+    merged = pd.merge(total_days, high_overtime_days, on='name', how='left').fillna(0)
+    merged['high_ratio'] = merged['high_days'] / merged['total_days']
+
+    consistent_high = merged[merged['high_ratio'] >= MIN_PERCENT_DAYS]
+
+    employee_info = df[['name', 'employee_id', 'department']].drop_duplicates()
+
+    consistent_high = pd.merge(consistent_high, employee_info, on='name', how='left')
+
+    total_employees = df['employee_id'].nunique()
+    total_overtime_hours = df['overtime_hours'].sum()
+    high_overtime_employees = consistent_high['employee_id'].nunique()  # already calculated
+    total_departments = df['department'].nunique()
+    
+    y = {
+        'total_employees': total_employees,
+        'total_overtime_hours': int(total_overtime_hours),
+        'high_overtime_employees': high_overtime_employees,
+        'total_departments': total_departments,
+    }
+    return render(request, 'monitoring/dashboard.html', y)
 
 def upload_csv(request):
     if request.method == 'POST':
@@ -332,3 +362,55 @@ def visual_analysis(request):
     }
 
     return render(request, 'analysis/diagrams.html', x)
+
+
+def business_impact(request):
+    # Step 1: Load data from DB
+    queryset = EmployeeOvertime.objects.all().values()
+    df = pd.DataFrame(queryset)
+
+    if df.empty:
+        return render(request, 'analysis/analysis_dashboard.html', {'message': 'No data available.'})
+
+    # Step 2: Convert date to datetime
+    df['date'] = pd.to_datetime(df['date'])
+
+    # 4. High Overtime Dep
+    department_overtime = df.groupby('department')['overtime_hours'].sum().reset_index()
+             #   Find the maximum overtime value
+    max_overtime = department_overtime['overtime_hours'].max()
+             #   Filter teams with that maximum value
+    high_overtime_dep = department_overtime[department_overtime['overtime_hours'] == max_overtime]
+
+    THRESHOLD = 1  # e.g., >1 hours considered high
+    MIN_PERCENT_DAYS = 0.6  # 60% of working days
+
+        # 2. Count total days and high overtime days per employee
+    df['high_overtime_flag'] = df['overtime_hours'] > THRESHOLD
+
+    total_days = df.groupby('name')['date'].nunique().reset_index(name='total_days')
+    high_overtime_days = df[df['high_overtime_flag']].groupby('name')['date'].nunique().reset_index(name='high_days')
+
+        # 3. Merge and calculate ratio
+    merged = pd.merge(total_days, high_overtime_days, on='name', how='left').fillna(0)
+    merged['high_ratio'] = merged['high_days'] / merged['total_days']
+
+        #  4. Filter consistent high overtime employees
+    consistent_high = merged[merged['high_ratio'] >= MIN_PERCENT_DAYS]
+
+        # 5. Add employee metadata
+    employee_info = df[['name', 'employee_id', 'department']].drop_duplicates()
+    consistent_high = pd.merge(consistent_high, employee_info, on='name', how='left')
+
+    # 6. Overtime by Day of Week
+    df['day_of_week'] = df['date'].dt.day_name()
+    weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
+
+    z = {
+        'high_overtime_dep': high_overtime_dep.to_dict(orient='records'),
+        'consistent_high': consistent_high.to_dict(orient='records'),
+        'weekday_overtime': weekday_overtime.to_dict(orient='records'),
+    }
+
+
+    return render(request, 'analysis/business_impact.html', z)
