@@ -406,10 +406,29 @@ def business_impact(request):
     df['day_of_week'] = df['date'].dt.day_name()
     weekday_overtime = df.groupby('day_of_week')['overtime_hours'].sum().reset_index()
 
+    #POLICY MAKING
+    policy_suggestions = []
+
+            # 1. Department Overload
+    for index, row in high_overtime_dep.iterrows():
+        policy_suggestions.append(f"Department '{row['department']}' has the highest overtime. Recommend reviewing workload or adding staff.")
+
+            # 2. Employee Burnout
+    for _, row in consistent_high.iterrows():
+        policy_suggestions.append(f"Employee '{row['name']}' has consistently high overtime. Recommend checking for burnout risk or workload redistribution.")
+
+            # 3. Weekday Analysis
+    peak_day = weekday_overtime.sort_values(by='overtime_hours', ascending=False).iloc[0]
+    policy_suggestions.append(f"Overtime is highest on '{peak_day['day_of_week']}'. Consider spreading deadlines or redistributing tasks.")
+
+            # 4. General
+    policy_suggestions.append("Recommend setting a policy cap of 10 overtime hours per week unless pre-approved by management.")
+
     z = {
         'high_overtime_dep': high_overtime_dep.to_dict(orient='records'),
         'consistent_high': consistent_high.to_dict(orient='records'),
         'weekday_overtime': weekday_overtime.to_dict(orient='records'),
+        'policy_suggestions': policy_suggestions
     }
 
 
